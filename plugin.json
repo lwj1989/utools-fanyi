@@ -1,0 +1,19 @@
+{
+	"pluginName": "中英翻译",
+	"description": "一个小翻译工具,目前采用金山翻译",
+	"main": "index.html",
+	"version": "0.0.1",
+	"author":"lwj",
+	"homepage":"https://lwj1989.top",
+	"logo":"logo.png",
+	"features": [
+		{
+		  "code": "翻译",
+		  "explain": "简洁的中英翻译小工具",
+			"cmds":["translate", "翻译","trans","fanyi"]
+		}
+	],
+	"pluginSetting": {
+	    "single": true
+	}
+}

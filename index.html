@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="./bootstrap/css/bootstrap.min.css"/>
+
+    <title>Hello, world!</title>
+    <style>
+      textarea {
+        margin: 15px;
+      }
+      button {
+        margin-top: 10px;
+      }
+      #target {
+        margin: 20px;
+      }
+      .container-fluid {
+        padding: 15px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <textarea
+          class="form-control"
+          id="origin"
+          rows="5"
+          placeholder="请输入需要翻译的内容"
+          onkeydown="if(event.keyCode==13) trans()"
+        ></textarea>
+      </div>
+      <div class="row">
+        <div class="col col-md-3">
+          <button type="button" class="btn btn-dark" onclick="trans()">
+            翻译
+          </button>
+        </div>
+      </div>
+      <div class="row">
+        <div id="target" class="text-justify text-secondary col"></div>
+      </div>
+    </div>
+
+    <script>
+      function trans() {
+        var origin_text = document.getElementById("origin").value;
+        if (!origin_text) {
+          document.getElementById("target").innerHTML =
+            '<div class="alert alert-danger" role="alert">输入不能为空!</div>';
+          return;
+        }
+        console.log(origin_text);
+        jinshan(origin_text);
+      }
+
+      function jinshan(content) {
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.open("POST", "http://fy.iciba.com/ajax.php?a=fy", true);
+        xmlhttp.setRequestHeader(
+          "Content-type",
+          "application/x-www-form-urlencoded"
+        );
+        xmlhttp.send("f=auto&t=zh&w=" + content);
+        xmlhttp.onreadystatechange = function () {
+          if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            console.log(xmlhttp.responseText);
+            var response = JSON.parse(xmlhttp.responseText);
+            // if ((response["status"] = 1)) {
+            if (response["isSensitive"] == 1) {
+              document.getElementById("target").innerHTML =
+                '<div class="alert alert-danger" role="alert">存在敏感词汇!</div>';
+            } else if (response["content"]["word_mean"]) {
+              document.getElementById("target").innerText =
+                response["content"]["word_mean"];
+            } else if (response["content"]["out"]) {
+              document.getElementById("target").innerText =
+                response["content"]["out"];
+            } else {
+              document.getElementById("target").innerText =
+                '<div class="alert alert-danger" role="alert">未识别!</div>';
+            }
+          }
+        };
+      }
+
+      window.onload=function(){
+        document.getElementById('origin').focus()
+      }
+    </script>
+  </body>
+</html>
